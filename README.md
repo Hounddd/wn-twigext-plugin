@@ -85,9 +85,6 @@ in this case, you could access methods of the ``Cache``class through:
 {{ object("Cache").get("TwigExt") }}
 ```
 
-Note: In the documentation below the description of the corresponding functions of version 1 of this plugin has been
-removed, the functions itself have not been removed for the very time being.
-
 ### QR Code
 #### QR code for inline use (qrcodeSRC and qrcodeIMG)
 Create a GIF with a red QR code on a transparent background pointing to *mercator.li*:
@@ -427,8 +424,6 @@ Filters and functions MUST provide return values. Multiple new filters or functi
 See [Winter's documentation](https://wintercms.com/docs/plugin/registration#extending-twig) for additional details.
 
 ## Contributing
-
-A big thanks to Matteo Trubini for his ideas regarding version 2 of the plugin.
 
 *Feel free to send pull request!* Please, send Pull Request to master branch.
 
