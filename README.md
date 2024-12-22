@@ -21,7 +21,7 @@ Currently the following Laravel classes and related methods are available: Stora
 Use Composer to install the plugin by executing
 
 ```
-composer require mercator/wn-twigext-plugin "^3.0"
+composer require mercator/wn-twigext-plugin "^3.0-dev"
 ```
 
 from the root of your [WinterCMS](https://wintercms.com) installation.
