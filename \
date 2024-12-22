@@ -1,1 +1,0 @@
-	{{ include(template_from_string("<h1>XXX", element.code)) }}
