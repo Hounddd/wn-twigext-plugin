@@ -66,7 +66,6 @@ class Plugin extends PluginBase
 
     public function registerSettings()
     {
-
         return ['settings' => [
             'label' => 'Twig Extensions (Second Edition)',
             'description' => 'Twig extension library providing Laravel native functionality, such as caching, sessions, cryptography, access to directories, files/storage, and many more.',
@@ -81,52 +80,31 @@ class Plugin extends PluginBase
 
     public function boot()
     {
-
-      Event::listen('cms.page.beforeRenderPage', function($controller) {
-          $controller->vars['laravel'] = new Hash();
+        Event::listen('cms.page.beforeRenderPage', function($controller) {
+            $controller->vars['laravel'] = new Hash();
         });
 
         //
         // Add event listener to add extra functionality as provieded by twig/* extensions
         //
-        Event::listen('cms.page.beforeRenderPage', function ($controller, $page) {
-            $twigExtension = new IntlExtension();
-            $twig = $controller->getTwig();
-            if (!$twig->hasExtension('Twig\Extra\Intl\IntlExtension')) {
-                $twig->addExtension($twigExtension);
-            }
+        Event::listen(['cms.page.beforeRenderPage', 'cms.ajax.beforeRunHandler'], function ($controller, $page) {
+            $this->twigAddExtensionIfNeeded($controller, IntlExtension::class);
         });
 
-        Event::listen('cms.page.beforeRenderPage', function ($controller, $page) {
-            $twigExtension = new HtmlExtension();
-            $twig = $controller->getTwig();
-            if (!$twig->hasExtension('Twig\Extra\Html\HtmlExtension')) {
-                $twig->addExtension($twigExtension);
-            }
+        Event::listen(['cms.page.beforeRenderPage', 'cms.ajax.beforeRunHandler'], function ($controller, $page) {
+            $this->twigAddExtensionIfNeeded($controller, HtmlExtension::class);
         });
 
-        Event::listen('cms.page.beforeRenderPage', function ($controller, $page) {
-            $twigExtension = new StringExtension();
-            $twig = $controller->getTwig();
-            if (!$twig->hasExtension('Twig\Extra\String\StringExtension')) {
-                $twig->addExtension($twigExtension);
-            }
+        Event::listen(['cms.page.beforeRenderPage', 'cms.ajax.beforeRunHandler'], function ($controller, $page) {
+            $this->twigAddExtensionIfNeeded($controller, StringExtension::class);
         });
 
-        Event::listen('cms.page.beforeRenderPage', function ($controller, $page) {
-            $twigExtension = new StringLoaderExtension();
-            $twig = $controller->getTwig();
-            if (!$twig->hasExtension('Twig\Extension\StringLoaderExtension')) {
-                $twig->addExtension($twigExtension);
-            }
+        Event::listen(['cms.page.beforeRenderPage', 'cms.ajax.beforeRunHandler'], function ($controller, $page) {
+            $this->twigAddExtensionIfNeeded($controller, StringLoaderExtension::class);
         });
 
-        Event::listen('cms.page.beforeRenderPage', function ($controller, $page) {
-            $twigExtension = new DateExtension();
-            $twig = $controller->getTwig();
-            if (!$twig->hasExtension('Twig\Extra\Date\DateExtension')) {
-                $twig->addExtension($twigExtension);
-            }
+        Event::listen(['cms.page.beforeRenderPage', 'cms.ajax.beforeRunHandler'], function ($controller, $page) {
+            $this->twigAddExtensionIfNeeded($controller, DateExtension::class);
         });
     }
 
@@ -154,5 +132,17 @@ class Plugin extends PluginBase
         // Return all filters and functions.
         //
         return ['filters' => $filters, 'functions' => $functions,];
+    }
+
+    /**
+     * Add extension to twig if not already loaded
+     */
+    protected function twigAddExtensionIfNeeded($controller, $extentionClass): void
+    {
+        $twig = $controller->getTwig();
+
+        if (!$twig->hasExtension($extentionClass)) {
+            $twig->addExtension(new $extentionClass);
+        }
     }
 }
